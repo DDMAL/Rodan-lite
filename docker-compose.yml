@@ -1,0 +1,140 @@
+# Docker Compose Configuration for Rodan-lite
+# ===========================================
+# Summary of the system's services:
+# - Frontend: rodan-client, nginx
+# - Task Queue: rabbitmq
+# - Backend: rodan-main, iipsrv (for Diva.js)
+# - Database: postgres, redis (messaging websocket)
+# - Workers: python3-celery, gpu-celery
+
+services:
+  # Frontend services
+  frontend-nginx:
+    build: ./frontend/nginx
+    environment:
+      TZ: America/Toronto
+      SERVER_HOST: localhost
+      VERSION: "nightly"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9002:9002"
+    # volumes:
+    #   - "resources:/rodan/data"
+
+#   frontend-client:
+#     # image: "ddmal/rodan-client:${DOCKER_TAG}"
+#     build: ./frontend/rodan-client
+#     # volumes:
+#     #   - "./rodan-client/code:/code"
+#     #   - "./rodan-client/config/configuration.json:/client/configuration.json"
+
+#   # Backend service: web server for Django & IIP Server
+#   backend-django:
+#     build: ./backend/rodan-main
+#     environment:
+#       TZ: America/Toronto
+#       SERVER_HOST: localhost
+#       CELERY_JOB_QUEUE: None
+#     depends_on:
+#       - postgres
+#       - rabbitmq
+#       - redis
+#       - iipsrv
+#     env_file:
+#       - ./scripts/local.env
+#     # volumes:
+#     #   - "resources:/rodan/data"
+#     #   - "./rodan-main/code:/code/Rodan"
+
+#   backend-iipsrv:
+#     image: "ddmal/iipsrv:${DOCKER_TAG}"
+#     # volumes:
+#     #   - "resources:/rodan/data"
+
+#   # Workers: celery (python2), python3, GPU
+#   # worker-py2:
+#   #   build:
+#   #   command: bash -c "tail -f /dev/null"
+#   #   environment:
+#   #     TZ: America/Toronto
+#   #     SERVER_HOST: localhost
+#   #     CELERY_JOB_QUEUE: celery
+#   #   depends_on:
+#   #     - postgres
+#   #     - rodan-main
+#   #     - rabbitmq
+#   #     - redis
+#   #   env_file:
+#   #     - ./scripts/local.env
+#   #   volumes:
+#   #     - "resources:/rodan/data"
+#   #     - "./rodan-main/code:/code/Rodan"
+
+#   # worker-py3-celery:
+#   #   command: bash -c "tail -f /dev/null"
+#   #   environment:
+#   #     TZ: America/Toronto
+#   #     SERVER_HOST: localhost
+#   #     CELERY_JOB_QUEUE: Python3
+#   #   env_file:
+#   #     - ./scripts/local.env
+#   #   volumes:
+#   #     - "resources:/rodan/data"
+#   #     - "./rodan-main/code:/code/Rodan"
+
+#   worker-gpu-celery:
+#     image: "ddmal/rodan-gpu-celery:${DOCKER_TAG}"
+#     command: bash -c "tail -f /dev/null"
+#     environment:
+#       TZ: America/Toronto
+#       SERVER_HOST: localhost
+#       CELERY_JOB_QUEUE: GPU
+#     depends_on:
+#       - postgres
+#       - rodan-main
+#       - rabbitmq
+#       - redis
+#       - celery
+#     env_file:
+#       - ./scripts/local.env
+#     volumes:
+#       - "resources:/rodan/data"
+#       - "./rodan-main/code:/code/Rodan"
+
+  # Database: PostgreSQL, Redit (messaging)
+  db-postgres:
+    # image: "ddmal/postgres-plpython:nightly"
+    build: ./database/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # env_file:
+    #   - ./scripts/local.env
+
+  db-redis:
+    # image: redis:alpine
+    build: ./database/redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - db-postgres
+
+  # Task Queue
+  tq-rabbitmq:
+    # image: 
+    build: ./taskqueue
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: "30s"
+      timeout: "3s"
+      retries: 3
+    # depends_on:
+    #   - redis
+    # env_file:
+    #   - ./scripts/local.env
