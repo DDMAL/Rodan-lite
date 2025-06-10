@@ -16,7 +16,7 @@
 
 
 ###########################################################
-FROM ubuntu:latest
+FROM nginx:latest
 
 # Install OS dependencies
 RUN apt-get update
