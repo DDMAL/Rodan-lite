@@ -1,5 +1,5 @@
 # --------- BUILDER IMAGE for Pixel and Neon ---------
-FROM alpine:latest AS builder
+FROM alpine:3.16 AS builder
 RUN apk update
 RUN apk add \
   bash \
@@ -28,7 +28,7 @@ FROM ddmal/gamera4:2.0.0 AS gamera
 
 # =========== MAIN / FINAL IMAGE ===========
 # This release is based on Debian 11 "Bullseye"
-FROM python:3.7-slim
+FROM python:3.7-slim AS final-image
 
 # Copy various scripts and make them executable.
 COPY ../../scripts/start-celery /run/
