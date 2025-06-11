@@ -1,4 +1,5 @@
-FROM alpine:3.16 AS builder
+# --------- BUILDER IMAGE for Pixel and Neon ---------
+FROM alpine:latest AS builder
 RUN apk update
 RUN apk add \
   bash \
@@ -8,24 +9,24 @@ RUN apk add \
   yarn
 
 # Build Pixel
-RUN git clone --recurse-submodules -b v2.0.2 https://github.com/DDMAL/pixel_wrapper.git
+FROM builder AS pixel-builder
+RUN git clone --recurse-submodules -b v2.0.2 https://github.com/DDMAL/pixel_wrapper
 WORKDIR /pixel_wrapper/
 RUN python3 activate_wrapper.py
 RUN npm install
 RUN ./node_modules/.bin/gulp develop:rodan
 
-# Build Neon
-WORKDIR /
-RUN git clone --recurse-submodules https://github.com/DDMAL/neon_wrapper
+# Build Neon, this might take a while
+FROM builder AS neon-builder
+RUN git clone --recurse-submodules -b develop https://github.com/DDMAL/neon_wrapper
 WORKDIR /neon_wrapper
-# RUN git submodule update --init 
-# RUN git submodule update --remote
 RUN yarn install
 RUN yarn build
 
-# Make Gamera files accessible to the main container.
+# --------- Get GAMERA files ---------
 FROM ddmal/gamera4:2.0.0 AS gamera
 
+# =========== MAIN / FINAL IMAGE ===========
 # This release is based on Debian 11 "Bullseye"
 FROM python:3.7-slim
 
@@ -36,10 +37,10 @@ RUN chmod +x /run/start-celery
 RUN chmod +x /run/wait-for-app
 
 # Copy external dependencies into main container.
-# rodan-main is not pulled from builder (to ease local development)
+# rodan-main is not pulled from builder-pixel-neon (to ease local development)
 COPY ../../backend/rodan-main/rodan-django /code/Rodan
-COPY --from=builder /pixel_wrapper /code/Rodan/rodan/jobs/pixel_wrapper
-COPY --from=builder /neon_wrapper /code/Rodan/rodan/jobs/neon_wrapper
+COPY --from=pixel-builder /pixel_wrapper /code/Rodan/rodan/jobs/pixel_wrapper
+COPY --from=neon-builder /neon_wrapper /code/Rodan/rodan/jobs/neon_wrapper
 # Gamera and Musicstaves will be installed later in this script.
 COPY --from=gamera /gamera4-rodan /gamera4-rodan
 
@@ -66,7 +67,7 @@ RUN pip3 install -r /code/Rodan/requirements.txt
 
 # Install Gamera and Musicstaves.
 WORKDIR /gamera4-rodan/gamera-4
-RUN python3 setup.py --nowx install
+RUN python3 setup.py --now install
 WORKDIR /gamera4-rodan/musicstaves
 RUN python3 setup.py install
 

@@ -18,17 +18,17 @@ docker compose up
 
 # Components
 
-| Category         | Component                   | Notes |
-| ---------------- | --------------------------- | ----- |
-| Frontend         | `nginx`                     |       |
-| Frontend         | `rodan-client`              |       |
-| Backend          | `rodan-main`/`rodan-django` |       |
-| Backend          | `iipsrv`                    |       |
-| Database         | `redis`                     |       |
-| Database         | `postgres`                  |       |
-| Task queue       | `rabbitmq`                  |       |
-| Workers (Celery) | `python3-celery`            |       |
-| Workers (Celery) | `gpu-celery`                |       |
-| Workers (Celery) | `celery`                    |       |
+| Category         | Component                   | Uses         |
+| ---------------- | --------------------------- | ------------ |
+| Frontend         | `nginx`                     |              |
+| Frontend         | `rodan-client`              | `scripts`    |
+| Backend          | `rodan-main`/`rodan-django` |              |
+| Backend          | `iipsrv`                    |              |
+| Database         | `redis`                     |              |
+| Database         | `postgres`                  |              |
+| Task queue       | `rabbitmq`                  |              |
+| Workers (Celery) | `python3-celery`            | `rodan-main` |
+| Workers (Celery) | `gpu-celery`                | `rodan-main` |
+| Workers (Celery) | `celery`                    | `rodan-main` |
 
 Note: for all `celery` jobs, the code are inside `rodan-main`/`rodan-django` folder.
