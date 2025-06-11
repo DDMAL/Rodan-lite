@@ -10,6 +10,7 @@
 services:
   # Frontend services
   frontend-nginx:
+    container_name: "rodan-frontend-nginx"
     build: ./frontend/nginx
     environment:
       TZ: America/Toronto
@@ -23,6 +24,7 @@ services:
     #   - "resources:/rodan/data"
 
   frontend-client:
+    container_name: "rodan-frontend-client"
     build: ./frontend/rodan-client
     # volumes:
     #   - "./rodan-client/code:/code"
@@ -47,6 +49,7 @@ services:
   #   - "./rodan-main/code:/code/Rodan"
 
   backend-iipsrv:
+    container_name: "rodan-backend-iipsrv"
     build: ./backend/iipsrv
     # volumes:
     #   - "resources:/rodan/data"
@@ -104,6 +107,7 @@ services:
 
   # Database: PostgreSQL, Redit (messaging)
   db-postgres:
+    container_name: "rodan-database-postgres"
     build: ./database/postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-U", "postgres"]
@@ -114,6 +118,7 @@ services:
     #   - ./scripts/local.env
 
   db-redis:
+    container_name: "rodan-database-redis"
     # image: redis:alpine
     build: ./database/redis
     healthcheck:
@@ -126,7 +131,7 @@ services:
 
   # Task Queue
   tq-rabbitmq:
-    # image:
+    container_name: "rodan-taskqueue-rabbitmq"
     build: ./taskqueue
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
