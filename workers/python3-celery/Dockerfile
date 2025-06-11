@@ -1,6 +1,4 @@
 FROM alpine:3.16 AS builder
-ARG BRANCH
-ENV BRANCH="${BRANCH:-develop}"
 RUN apk update
 RUN apk add \
   bash \
@@ -18,9 +16,9 @@ RUN ./node_modules/.bin/gulp develop:rodan
 
 # Build Neon
 WORKDIR /
-RUN git clone --recurse-submodules -b "${BRANCH}" https://github.com/DDMAL/neon_wrapper
+RUN git clone --recurse-submodules https://github.com/DDMAL/neon_wrapper
 WORKDIR /neon_wrapper
-# RUN git submodule update --init
+# RUN git submodule update --init 
 # RUN git submodule update --remote
 RUN yarn install
 RUN yarn build
@@ -32,14 +30,14 @@ FROM ddmal/gamera4:2.0.0 AS gamera
 FROM python:3.7-slim
 
 # Copy various scripts and make them executable.
-COPY ./scripts/start-celery /run/
-COPY ./scripts/wait-for-app /run/
+COPY ../../scripts/start-celery /run/
+COPY ../../scripts/wait-for-app /run/
 RUN chmod +x /run/start-celery
 RUN chmod +x /run/wait-for-app
 
 # Copy external dependencies into main container.
 # rodan-main is not pulled from builder (to ease local development)
-COPY ./rodan-main/code /code/Rodan
+COPY ../../backend/rodan-main/rodan-django /code/Rodan
 COPY --from=builder /pixel_wrapper /code/Rodan/rodan/jobs/pixel_wrapper
 COPY --from=builder /neon_wrapper /code/Rodan/rodan/jobs/neon_wrapper
 # Gamera and Musicstaves will be installed later in this script.

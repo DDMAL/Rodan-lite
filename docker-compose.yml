@@ -70,8 +70,10 @@ services:
   #     - "resources:/rodan/data"
   #     - "./rodan-main/code:/code/Rodan"
 
-  # worker-py3-celery:
-  #   build: ./workers/python3-celery
+  worker-py3-celery:
+    build:
+      context: .
+      dockerfile: ./workers/python3-celery/Dockerfile
   #   command: bash -c "tail -f /dev/null"
   #   environment:
   #     TZ: America/Toronto
