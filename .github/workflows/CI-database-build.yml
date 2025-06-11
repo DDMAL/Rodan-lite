@@ -1,0 +1,30 @@
+name: CI - build database components
+run-name: "CI: Build Rodan-lite database components"
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - "database/**"
+  pull_request:
+    paths:
+      - "database/**"
+  workflow_dispatch:
+
+jobs:
+  backend-rodan-build-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      # ------- Postgres -------
+      - name: Build redis
+        run: docker compose build db-postgres
+      # ------- Redis -------
+      - name: Build redis
+        run: docker compose build db-redis

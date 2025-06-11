@@ -1,0 +1,28 @@
+name: CI - build workers components
+run-name: "CI: Build workers Docker images"
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'workers/**'
+  pull_request:
+    paths:
+      - 'workers/**'
+  workflow_dispatch:
+
+jobs:
+  frontend-rodan-build-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      # ------- Python3 Celery -------
+      - name: Build python3-celery workers
+        run: docker compose build worker-py3-celery
+      
