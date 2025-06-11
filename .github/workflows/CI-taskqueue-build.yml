@@ -1,0 +1,27 @@
+name: CI - build RabbitMQ taskqueue component
+run-name: "CI: Build Rodan-lite Taskqueue"
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'taskqueue/**'
+  pull_request:
+    paths:
+      - 'taskqueue/**'
+  workflow_dispatch:
+
+jobs:
+  backend-rodan-build-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      # ------- RabbitMQ -------
+      - name: Build rabbitmq
+        run: docker compose build tq-rabbitmq

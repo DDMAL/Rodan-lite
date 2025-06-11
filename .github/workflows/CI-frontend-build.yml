@@ -1,0 +1,31 @@
+name: CI - build frontend components
+run-name: "CI: Build Rodan-lite frontend Docker images"
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'frontend/**'
+  pull_request:
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:
+
+jobs:
+  frontend-rodan-build-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      # ------- Nginx -------
+      - name: Build frontend nginx
+        run: docker compose build frontend-nginx
+      # ------- Rodan client -------
+      - name: Build frontend client
+        run: docker compose build frontend-client
+      
