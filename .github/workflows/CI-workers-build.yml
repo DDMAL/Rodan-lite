@@ -1,5 +1,5 @@
-name: CI - build workers components
-run-name: "CI: Build workers Docker images"
+name: CI - Workers components
+run-name: "CI: Build Rodan-lite workers images"
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  frontend-rodan-build-test:
+  workers-build:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout this repo

@@ -1,4 +1,4 @@
-name: CI - build database components
+name: CI - Database components
 run-name: "CI: Build Rodan-lite database components"
 on:
   push:
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  backend-rodan-build-test:
+  database-build:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout this repo
