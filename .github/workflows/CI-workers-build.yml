@@ -26,4 +26,7 @@ jobs:
       # ------- Python3 Celery -------
       - name: Build python3-celery workers
         run: docker compose build worker-py3-celery
+      # ------- Python2/Rodan-main Celery -------
+      - name: Build python2-celery workers
+        run: docker compose build worker-py2-celery
       
