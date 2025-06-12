@@ -1,9 +1,5 @@
-ARG BRANCHES
-ARG VERSION
-ARG BUILD_HASH
-
-# FROM ddmal/rodan-python3-celery:${VERSION}
 FROM ubuntu:latest
+
 # Install OpenJPEG dependencies.
 RUN \
   # flip this to trigger a new layer because the scripts are cached.
@@ -33,8 +29,8 @@ RUN \
   && make -j3
 
 # This script gets the gpu jobs into celery
-COPY ./scripts/install_gpu_rodan_jobs /opt/install_gpu_rodan_jobs
-COPY ./scripts/start /run/
+COPY ../../scripts/install_gpu_rodan_jobs /opt/install_gpu_rodan_jobs
+COPY ../../scripts/start /run/
 RUN set -e \
   && chmod +x /opt/install_gpu_rodan_jobs \
   && chown www-data /opt/install_gpu_rodan_jobs \
@@ -45,7 +41,7 @@ RUN set -e \
 RUN /opt/install_gpu_rodan_jobs
 
 # Add entrypoint
-COPY ./scripts/entrypoint /opt
+COPY ../../scripts/entrypoint /opt
 RUN chmod +x /opt/entrypoint \
   && chown www-data /opt/entrypoint
 
@@ -56,4 +52,4 @@ RUN sed -i "s/__build_hash__ = \"local\"/__build_hash__ = \"${BUILD_HASH}\"/" /c
 RUN sed -i "s/concurrency=10/concurrency=6/g" /run/start-celery
 RUN sed -i "s/max-tasks-per-child=1/max-tasks-per-child=5/g" /run/start-celery
 
-ENTRYPOINT ["/opt/entrypoint"]
+# ENTRYPOINT ["/opt/entrypoint"]

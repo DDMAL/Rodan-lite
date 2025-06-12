@@ -54,9 +54,10 @@ services:
     # volumes:
     #   - "resources:/rodan/data"
 
-  # Workers: celery (python2), python3, GPU
-  # worker-py2:
-  #   build:
+  # Workers: main celery (python2), python3, GPU
+  worker-py2-celery:
+    container_name: "rodan-worker-python2-celery"
+    build: ./workers/python2-celery
   #   command: bash -c "tail -f /dev/null"
   #   environment:
   #     TZ: America/Toronto
@@ -74,9 +75,8 @@ services:
   #     - "./rodan-main/code:/code/Rodan"
 
   worker-py3-celery:
-    build:
-      context: .
-      dockerfile: ./workers/python3-celery/Dockerfile
+    container_name: "rodan-worker-python3-celery"
+    build: ./workers/python3-celery
   #   command: bash -c "tail -f /dev/null"
   #   environment:
   #     TZ: America/Toronto
