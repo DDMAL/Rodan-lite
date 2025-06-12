@@ -38,7 +38,7 @@ RUN chmod +x /run/wait-for-app
 
 # Copy external dependencies into main container.
 # rodan-main is not pulled from builder-pixel-neon (to ease local development)
-COPY ../../backend/rodan-main/rodan-django /code/Rodan
+COPY ../../backend/rodan-main /code/Rodan
 COPY --from=pixel-builder /pixel_wrapper /code/Rodan/rodan/jobs/pixel_wrapper
 COPY --from=neon-builder /neon_wrapper /code/Rodan/rodan/jobs/neon_wrapper
 # Gamera and Musicstaves will be installed later in this script.
@@ -65,9 +65,12 @@ RUN apt-get install -y \
 RUN pip3 install setuptools==58
 RUN pip3 install -r /code/Rodan/requirements.txt
 
-# Install Gamera and Musicstaves.
+# Install Gamera. Note: `--nowx` is a valid option for `gamera`
+# https://github.com/DDMAL/Gamera/blob/e0bd310eb649645d941092a32b42acab8138675a/setup.py#L75-L77
 WORKDIR /gamera4-rodan/gamera-4
-RUN python3 setup.py --now install
+RUN python3 setup.py --nowx install
+
+# Install Musicstaves
 WORKDIR /gamera4-rodan/musicstaves
 RUN python3 setup.py install
 
