@@ -31,8 +31,10 @@ services:
     #   - "./rodan-client/config/configuration.json:/client/configuration.json"
 
   # Backend service: web server for Django & IIP Server
-  # backend-django:
-  #   build: ./backend/rodan-main
+  backend-django:
+    build:
+      context: .
+      dockerfile: ./backend/rodan-main/Dockerfile
   #   environment:
   #     TZ: America/Toronto
   #     SERVER_HOST: localhost
