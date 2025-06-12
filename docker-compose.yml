@@ -88,8 +88,10 @@ services:
   #     - "resources:/rodan/data"
   #     - "./rodan-main/code:/code/Rodan"
 
-  # worker-gpu-celery:
-  #   build: ./workers/gpu-celery
+  worker-gpu-celery:
+     build:
+       context: .
+       dockerfile: ./workers/gpu-celery/Dockerfile
   #   command: bash -c "tail -f /dev/null"
   #   environment:
   #     TZ: America/Toronto
