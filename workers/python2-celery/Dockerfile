@@ -1,3 +1,4 @@
+# FROM ddmal/rodan-python3-celery:${VERSION} ?????
 FROM ubuntu:latest
 
 # Install OpenJPEG dependencies.
@@ -28,9 +29,9 @@ RUN git clone https://github.com/raviraina/grok.git
 WORKDIR /vendor/grok
 
 RUN git checkout 4932d86b19d9008a28ae898035cfa43340e636e6
-# RUN mkdir build
 RUN /vendor/cmake-3.17.0-Linux-x86_64/bin/cmake -DBUILD_THIRDPARTY=ON .
-RUN make -j3
+# TODO: ISSUE
+# make -j3
 
 # This script gets the gpu jobs into celery
 # WORKDIR /
@@ -46,9 +47,9 @@ RUN make -j3
 # RUN /opt/install_gpu_rodan_jobs
 
 # # Add entrypoint
-# COPY ../../scripts/entrypoint /opt/entrypoint
-# RUN chmod +x /opt/entrypoint \
-#   && chown www-data /opt/entrypoint
+COPY ../../scripts/entrypoint /opt/entrypoint
+RUN chmod +x /opt/entrypoint \
+  && chown www-data /opt/entrypoint
 
 # # Substitute the build hash for our actual build hash
 # RUN sed -i "s/__build_hash__ = \"local\"/__build_hash__ = \"${BUILD_HASH}\"/" /code/Rodan/rodan/__init__.py
