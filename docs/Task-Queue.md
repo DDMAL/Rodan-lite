@@ -3,9 +3,9 @@
 Rodan assigns jobs to different queues in Celery depending on the kind of job it is.
 At the time of writing the queues are:
 
-* None or celery: this is **only** for core jobs and runs on the celery container;
-* Python3: this is for all Python3 jobs and runs on the py3-celery container; and
-* GPU: this is for all Python3 jobs that need a GPU and runs on the gpu-celery container.
+* None or `celery`: this is **only** for core jobs and runs on the celery container;
+* `Python3`: this is for all Python3 jobs and runs on the py3-celery container; and
+* `GPU`: this is for all Python3 jobs that need a GPU and runs on the gpu-celery container.
 
 # Specifying a Queue for a Job
 

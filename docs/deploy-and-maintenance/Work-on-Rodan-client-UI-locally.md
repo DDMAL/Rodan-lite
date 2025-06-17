@@ -1,6 +1,6 @@
 1. delete images with docker desktop and pull with make pull
 2. replace `./rodan-client/Dockerfile.old`  with this one:
-```
+```Dockerfile
 FROM debian
 EXPOSE 9002
 
@@ -46,7 +46,7 @@ RUN chmod +x /run/start
 ```
 3. in rodan’s directory, run `cd rodan-client && docker build -t ddmal/rodan-client:dev -f Dockerfile.old .`
 4. replace `docker-compose.yml`  with this:
-```
+```YML
 version: "3.4"
 services:
   nginx:
