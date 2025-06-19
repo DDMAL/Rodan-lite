@@ -16,9 +16,7 @@ services:
   # Frontend services
   frontend-nginx:
     container_name: "frontend-nginx"
-    build: 
-      context: .
-      dockerfile: ./frontend/nginx/Dockerfile
+    build: ./frontend/nginx
     environment:
       TZ: America/Toronto
       SERVER_HOST: localhost

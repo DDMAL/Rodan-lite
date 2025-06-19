@@ -14,19 +14,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  frontend-build:
+  # ------- Nginx -------
+  frontend-nginx-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout this repo
-        uses: actions/checkout@v3
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
         with:
           version: latest
-      # ------- Nginx -------
       - name: Build frontend nginx
         run: docker compose build frontend-nginx
-      # ------- Rodan client -------
+  # ------- Rodan client -------
+  frontend-client-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
+        with:
+          version: latest
       - name: Build frontend client
         run: docker compose build frontend-client
       
