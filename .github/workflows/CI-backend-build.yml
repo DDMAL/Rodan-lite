@@ -14,15 +14,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  backend-build:
-    runs-on: ubuntu-22.04
+  # ------- IIP Server -------
+  backend-iipsrv-build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout this repo
-        uses: actions/checkout@v3
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
         with:
           version: latest
-      # ------- IIP Server -------
       - name: Build backend iipsrv
-        run: docker compose build frontend-nginx
+        run: docker compose backend-iipsrv
+  # ------- Django -------
+  backend-iipsrv-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      - name: Build backend Django (rodan-main)
+        run: docker compose backend-django
