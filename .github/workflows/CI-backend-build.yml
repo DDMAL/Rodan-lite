@@ -23,7 +23,7 @@ jobs:
         with:
           version: latest
       - name: Build backend iipsrv
-        run: docker compose backend-iipsrv
+        run: docker compose build backend-iipsrv
   # ------- Django -------
   backend-django-build:
     runs-on: ubuntu-latest
@@ -33,4 +33,4 @@ jobs:
         with:
           version: latest
       - name: Build backend Django (rodan-main)
-        run: docker compose backend-django
+        run: docker compose build backend-django

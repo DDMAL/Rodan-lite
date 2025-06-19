@@ -7,15 +7,19 @@ on:
       - main
     paths:
       - 'workers/**'
-      - '.github/workflows/**'
+      - '.github/workflows/*workers*'
   pull_request:
     paths:
       - 'workers/**'
   workflow_dispatch:
 
+concurrency:
+  group: 'worker-test-build'
+  cancel-in-progress: true
+
 jobs:
   workers-build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3

@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'frontend/**'
-      - '.github/workflows/**'
+      - '.github/workflows/*frontend*'
   pull_request:
     paths:
       - 'frontend/**'
@@ -15,7 +15,7 @@ on:
 
 jobs:
   frontend-build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3

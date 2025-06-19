@@ -7,15 +7,15 @@ on:
       - main
     paths:
       - 'taskqueue/**'
-      - '.github/workflows/**'
+      - '.github/workflows/*taskqueue*'
   pull_request:
     paths:
       - 'taskqueue/**'
   workflow_dispatch:
 
 jobs:
-  taskqueue-build:
-    runs-on: ubuntu-22.04
+  taskqueue-rabbitmq-build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
@@ -25,4 +25,4 @@ jobs:
           version: latest
       # ------- RabbitMQ -------
       - name: Build rabbitmq
-        run: docker compose build tq-rabbitmq
+        run: docker compose build taskqueue-rabbitmq

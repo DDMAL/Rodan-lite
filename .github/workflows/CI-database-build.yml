@@ -7,25 +7,30 @@ on:
       - main
     paths:
       - "database/**"
-      - '.github/workflows/**'
+      - '.github/workflows/*database*.yml'
   pull_request:
     paths:
       - "database/**"
   workflow_dispatch:
 
 jobs:
-  database-build:
-    runs-on: ubuntu-22.04
+  # ------- Postgres -------
+  database-postgres-build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout this repo
-        uses: actions/checkout@v3
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
         with:
           version: latest
-      # ------- Postgres -------
+      - name: Build PostgreSQL Database
+        run: docker compose build database-postgres
+  # ------- Redis -------
+  database-redis-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
+        with:
+          version: latest
       - name: Build redis
-        run: docker compose build db-postgres
-      # ------- Redis -------
-      - name: Build redis
-        run: docker compose build db-redis
+        run: docker compose build database-redis
