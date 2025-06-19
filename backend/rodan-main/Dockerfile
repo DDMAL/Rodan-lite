@@ -2,7 +2,7 @@ ARG BRANCHES
 ARG VERSION
 ARG BUILD_HASH
 
-# FROM ddmal/rodan-python3-celery:${VERSION}
+# FROM ddmal/rodan-python3-celery:nightly
 FROM ubuntu:latest
 # Install OpenJPEG dependencies.
 RUN \
@@ -33,8 +33,8 @@ RUN \
   && make -j3
 
 # This script gets the gpu jobs into celery
-COPY ./scripts/install_gpu_rodan_jobs /opt/install_gpu_rodan_jobs
-COPY ./scripts/start /run/
+COPY ../../scripts/install_gpu_rodan_jobs /opt/install_gpu_rodan_jobs
+COPY ../../scripts/start /run/
 RUN set -e \
   && chmod +x /opt/install_gpu_rodan_jobs \
   && chown www-data /opt/install_gpu_rodan_jobs \
@@ -45,7 +45,7 @@ RUN set -e \
 RUN /opt/install_gpu_rodan_jobs
 
 # Add entrypoint
-COPY ./scripts/entrypoint /opt
+COPY ../../scripts/entrypoint /opt
 RUN chmod +x /opt/entrypoint \
   && chown www-data /opt/entrypoint
 

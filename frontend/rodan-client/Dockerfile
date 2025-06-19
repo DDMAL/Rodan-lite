@@ -1,5 +1,5 @@
 # Alpine 3.15 is the last version to support Python 2.
-FROM node:12.22.6-alpine as builder
+FROM node:12.22.6-alpine AS builder
 
 # Install OS packages.
 RUN apk add --no-cache \

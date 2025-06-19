@@ -1,7 +1,6 @@
 # --------- BUILDER IMAGE for Pixel and Neon ---------
 FROM alpine:3.16 AS builder
-RUN apk update
-RUN apk add \
+RUN apk update && apk add \
   bash \
   git \
   npm \
@@ -45,8 +44,7 @@ COPY --from=neon-builder /neon_wrapper /code/Rodan/rodan/jobs/neon_wrapper
 COPY --from=gamera /gamera4-rodan /gamera4-rodan
 
 # Install dependencies.
-RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
   bash \
   curl \
   g++ \

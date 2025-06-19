@@ -4,7 +4,7 @@
 # WHY NOT?! I've rebuilt the layers prior multiple times!!!!
 # /opt/install_gpu_rodan_jobs || echo "GPU jobs not install in the entrypoint"
 
-/run/wait-for-app postgres:5432
-/run/wait-for-app redis:6379
+/run/wait-for-app database-postgres:5432
+/run/wait-for-app database-redis:6379
 
 exec "$@"

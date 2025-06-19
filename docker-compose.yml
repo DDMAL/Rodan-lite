@@ -1,58 +1,72 @@
 # Docker Compose Configuration for Rodan-lite
+#    +-----+ Production version +-----+ 
+# 
 # ===========================================
 # Summary of the system's services:
 # - Frontend: rodan-client, nginx
-# - Task Queue: rabbitmq
 # - Backend: rodan-main, iipsrv (for Diva.js)
+# - Task Queue: rabbitmq
 # - Database: postgres, redis (messaging websocket)
 # - Workers: python3-celery, gpu-celery
+
+volumes:
+  rodan-resources:
 
 services:
   # Frontend services
   frontend-nginx:
-    container_name: "rodan-frontend-nginx"
-    build: ./frontend/nginx
+    container_name: "frontend-nginx"
+    build: 
+      context: .
+      dockerfile: ./frontend/nginx/Dockerfile
     environment:
       TZ: America/Toronto
       SERVER_HOST: localhost
-      VERSION: "nightly"
+      # VERSION: "nightly"
     ports:
       - "80:80"
       - "443:443"
       - "9002:9002"
-    # volumes:
-    #   - "resources:/rodan/data"
+    volumes:
+      - "rodan-resources:/rodan/data"
+    depends_on:
+      - backend-iipsrv
+      - backend-django
+      - frontend-client
 
   frontend-client:
-    container_name: "rodan-frontend-client"
+    container_name: "frontend-client"
     build: ./frontend/rodan-client
-    # volumes:
-    #   - "./rodan-client/code:/code"
-    #   - "./rodan-client/config/configuration.json:/client/configuration.json"
+    volumes:
+      - "./frontend/rodan-client/code:/code"
+      - "./frontend/rodan-client/config/configuration.json:/client/configuration.json"
 
   # Backend service: web server for Django & IIP Server
-  # backend-django:
-  #   build: ./backend/rodan-main
-  #   environment:
-  #     TZ: America/Toronto
-  #     SERVER_HOST: localhost
-  #     CELERY_JOB_QUEUE: None
-  # depends_on:
-  #   - postgres
-  #   - rabbitmq
-  #   - redis
-  #   - iipsrv
-  # env_file:
-  #   - ./scripts/local.env
-  # volumes:
-  #   - "resources:/rodan/data"
-  #   - "./rodan-main/code:/code/Rodan"
+  backend-django:
+    container_name: "backend-django"
+    build:
+      context: .
+      dockerfile: ./backend/rodan-main/Dockerfile
+    environment:
+      TZ: America/Toronto
+      SERVER_HOST: localhost
+      CELERY_JOB_QUEUE: None
+    depends_on:
+      - database-postgres
+      - taskqueue-rabbitmq
+      - database-redis
+      - backend-iipsrv
+    env_file:
+      - ./scripts/local.env
+    volumes:
+      - "rodan-resources:/rodan/data"
+      - "./backend/rodan-main/code:/code/Rodan"
 
   backend-iipsrv:
-    container_name: "rodan-backend-iipsrv"
+    container_name: "backend-iipsrv"
     build: ./backend/iipsrv
-    # volumes:
-    #   - "resources:/rodan/data"
+    volumes:
+      - "rodan-resources:/rodan/data"
 
   # Workers: celery (python2), python3, GPU
   # worker-py2:
@@ -74,19 +88,24 @@ services:
   #     - "./rodan-main/code:/code/Rodan"
 
   worker-py3-celery:
+    container_name: "worker-py3-celery"
     build:
       context: .
       dockerfile: ./workers/python3-celery/Dockerfile
-  #   command: bash -c "tail -f /dev/null"
-  #   environment:
-  #     TZ: America/Toronto
-  #     SERVER_HOST: localhost
-  #     CELERY_JOB_QUEUE: Python3
-  #   env_file:
-  #     - ./scripts/local.env
-  #   volumes:
-  #     - "resources:/rodan/data"
-  #     - "./rodan-main/code:/code/Rodan"
+    command: bash -c "tail -f /dev/null"
+    environment:
+      TZ: America/Toronto
+      SERVER_HOST: localhost
+      CELERY_JOB_QUEUE: Python3
+    env_file:
+      - ./scripts/local.env
+    volumes:
+      - "rodan-resources:/rodan/data"
+      - "./backend/rodan-main/code:/code/Rodan"
+    depends_on:
+      - backend-django
+      - database-postgres
+      - database-redis
 
   # worker-gpu-celery:
   #   build: ./workers/gpu-celery
@@ -108,20 +127,19 @@ services:
   #     - "./rodan-main/code:/code/Rodan"
 
   # Database: PostgreSQL, Redit (messaging)
-  db-postgres:
-    container_name: "rodan-database-postgres"
+  database-postgres:
+    container_name: "database-postgres"
     build: ./database/postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    # env_file:
-    #   - ./scripts/local.env
+    env_file:
+      - ./scripts/local.env
 
-  db-redis:
-    container_name: "rodan-database-redis"
-    # image: redis:alpine
+  database-redis:
+    container_name: "database-redis"
     build: ./database/redis
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -129,11 +147,11 @@ services:
       timeout: 5s
       retries: 5
     depends_on:
-      - db-postgres
+      - database-postgres
 
   # Task Queue
-  tq-rabbitmq:
-    container_name: "rodan-taskqueue-rabbitmq"
+  taskqueue-rabbitmq:
+    container_name: "taskqueue-rabbitmq"
     build: ./taskqueue
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
@@ -141,6 +159,6 @@ services:
       timeout: "3s"
       retries: 3
     depends_on:
-      - db-redis
-    # env_file:
-    #   - ./scripts/local.env
+      - database-redis
+    env_file:
+      - ./scripts/local.env
