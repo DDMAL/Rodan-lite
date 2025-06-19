@@ -4,21 +4,22 @@ A lighter version of Rodan, for a simpler dev's life
 
 # Commands
 
-- Building the project:
+- Build & then run Rodan:
 
 ```sh
 docker compose build
-```
-
-- Run Rodan:
-
-```sh
 docker compose up
 ```
 
 - Build the project from starch (going to be a separate compose file):
 ```sh
 docker compose -f docker-compose.yml build
+```
+
+- Run on production (goal)
+```sh
+docker compose pull
+docker compose up -d
 ```
 
 # Components
