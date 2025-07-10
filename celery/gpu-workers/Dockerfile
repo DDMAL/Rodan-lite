@@ -144,7 +144,7 @@ RUN rm -rf /var/lib/apt/lists/*
 #RUN pip uninstall opencv-python-headless && pip install opencv-python-headless==4.1.2.30
 
 # Install GPU Rodan Jobs
-COPY ./scripts/install_gpu_rodan_jobs /opt/
+COPY ../../scripts/install_gpu_rodan_jobs /opt/
 
 # Install Rodan
 # Runs on both Rodan service, and Rodan-Celery
