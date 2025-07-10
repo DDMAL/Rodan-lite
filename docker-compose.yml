@@ -137,6 +137,16 @@ services:
     volumes:
       - "rodan-resources:/rodan/data"
       - "./backend/rodan-main/code:/code/Rodan"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility]
+              # See more: 
+              # - https://docs.docker.com/compose/how-tos/gpu-support/
+              # - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html
 
   # Database: PostgreSQL, Redit (messaging)
   database-postgres:

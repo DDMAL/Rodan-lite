@@ -2,6 +2,10 @@
 
 A lighter version of Rodan, for a simpler dev's life
 
+Host machine pre-requisite:
+- `docker`, obviously :)
+- `nvidia-container-toolkit` for GPU Celery jobs 
+
 # Commands
 
 - Build & then run Rodan:
