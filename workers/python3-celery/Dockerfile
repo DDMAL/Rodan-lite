@@ -17,7 +17,9 @@ RUN ./node_modules/.bin/gulp develop:rodan
 
 # Build Neon, this might take a while
 FROM builder AS neon-builder
-RUN git clone --recurse-submodules -b develop https://github.com/DDMAL/neon_wrapper
+# TODO: Remove this temporary fix. Neon has a huge .git history (~4GB) that takes a lot of time to clone
+# RUN git clone --recurse-submodules -b develop https://github.com/DDMAL/neon_wrapper
+RUN git clone -b main https://github.com/notkaramel/neon_wrapper
 WORKDIR /neon_wrapper
 RUN yarn install
 RUN yarn build
