@@ -66,26 +66,36 @@ services:
     volumes:
       - "rodan-resources:/rodan/data"
 
-  # Workers: celery (python2), python3, GPU
-  # worker-py2:
-  #   build:
-  #   command: bash -c "tail -f /dev/null"
-  #   environment:
-  #     TZ: America/Toronto
-  #     SERVER_HOST: localhost
-  #     CELERY_JOB_QUEUE: celery
-  #   depends_on:
-  #     - postgres
-  #     - rodan-main
-  #     - rabbitmq
-  #     - redis
-  #   env_file:
-  #     - ./scripts/local.env
-  #   volumes:
-  #     - "resources:/rodan/data"
-  #     - "./rodan-main/code:/code/Rodan"
+  # Celery Controller: 
+  # * celery-controller: The main controller for all-things celery
+  celery-controller:
+    container_name: "celery-controller"
+    build:
+      context: .
+      dockerfile: ./backend/rodan-main/Dockerfile
+    # command: bash -c "tail -f /dev/null"
+    environment:
+      TZ: America/Toronto
+      SERVER_HOST: localhost
+      CELERY_JOB_QUEUE: celery # THIS IS THE IMPORTANT PART
+    depends_on:
+      - backend-django
+      - taskqueue-rabbitmq
+      - database-postgres
+      - database-redis
+    env_file:
+      - ./scripts/local.env
+    volumes:
+      - "rodan-resources:/rodan/data"
+      - "./backend/rodan-main/code:/code/Rodan"
+  
+  
+  # Celery Workers: Python and GPU (and more!) 
+  # * celery-python-workers
+  # * celery-gpu-workers
+  # * celery-...
 
-  worker-py3-celery:
+  celery-python-workers:
     container_name: "worker-py3-celery"
     build:
       context: .
@@ -94,35 +104,39 @@ services:
     environment:
       TZ: America/Toronto
       SERVER_HOST: localhost
-      CELERY_JOB_QUEUE: Python3
+      # CELERY_JOB_QUEUE: Python3
+    env_file:
+      - ./scripts/local.env
+    depends_on:
+      - backend-django
+      - taskqueue-rabbitmq
+      - database-postgres
+      - database-redis
+      - celery-controller
+    volumes:
+      - "rodan-resources:/rodan/data"
+      - "./backend/rodan-main/code:/code/Rodan"
+
+  celery-gpu-workers:
+    build:
+      context: .
+      dockerfile: ./workers/gpu-celery/Dockerfile
+    command: bash -c "tail -f /dev/null"
+    environment:
+      TZ: America/Toronto
+      SERVER_HOST: localhost
+      # CELERY_JOB_QUEUE: GPU
+    depends_on:
+      - backend-django
+      - taskqueue-rabbitmq
+      - database-postgres
+      - database-redis
+      - celery-controller
     env_file:
       - ./scripts/local.env
     volumes:
       - "rodan-resources:/rodan/data"
       - "./backend/rodan-main/code:/code/Rodan"
-    depends_on:
-      - backend-django
-      - database-postgres
-      - database-redis
-
-  # worker-gpu-celery:
-  #   build: ./workers/gpu-celery
-  #   command: bash -c "tail -f /dev/null"
-  #   environment:
-  #     TZ: America/Toronto
-  #     SERVER_HOST: localhost
-  #     CELERY_JOB_QUEUE: GPU
-  #   depends_on:
-  #     - postgres
-  #     - rodan-main
-  #     - rabbitmq
-  #     - redis
-  #     - celery
-  #   env_file:
-  #     - ./scripts/local.env
-  #   volumes:
-  #     - "resources:/rodan/data"
-  #     - "./rodan-main/code:/code/Rodan"
 
   # Database: PostgreSQL, Redit (messaging)
   database-postgres:

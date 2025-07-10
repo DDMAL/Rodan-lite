@@ -2,8 +2,8 @@ ARG BRANCHES
 ARG VERSION
 ARG BUILD_HASH
 
-# FROM ddmal/rodan-python3-celery:nightly
-FROM ubuntu:latest
+FROM ddmal/rodan-python3-celery:nightly
+# FROM ubuntu:latest
 # Install OpenJPEG dependencies.
 RUN \
   # flip this to trigger a new layer because the scripts are cached.
