@@ -1,0 +1,39 @@
+name: CI - Celery (Controller + Workers) components
+run-name: "CI: Build Rodan-lite celery-related images"
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'celery/**'
+      - '.github/workflows/*workers*'
+  pull_request:
+    paths:
+      - 'celery/**'
+  workflow_dispatch:
+
+concurrency:
+  group: 'celery-test-build'
+  cancel-in-progress: true
+
+jobs:
+  celery-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      # ------- Celery Controller -------
+      - name: Build celery controller
+        run: docker compose build celery-controller
+      # ------- Celery Controller -------
+      - name: Build Python-related celery workers
+        run: docker compose build celery-python-workers
+      # ------- Celery Controller -------
+      - name: Build GPU-related celery workers
+        run: docker compose build celery-gpu-workers
+      

@@ -96,10 +96,10 @@ services:
   # * celery-...
 
   celery-python-workers:
-    container_name: "worker-py3-celery"
+    container_name: "celery-python-workers"
     build:
       context: .
-      dockerfile: ./workers/python3-celery/Dockerfile
+      dockerfile: ./celery/python-workers/Dockerfile
     command: bash -c "tail -f /dev/null"
     environment:
       TZ: America/Toronto
@@ -120,7 +120,7 @@ services:
   celery-gpu-workers:
     build:
       context: .
-      dockerfile: ./workers/gpu-celery/Dockerfile
+      dockerfile: ./celery/gpu-workers/Dockerfile
     command: bash -c "tail -f /dev/null"
     environment:
       TZ: America/Toronto
