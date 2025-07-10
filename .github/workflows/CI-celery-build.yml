@@ -18,7 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  celery-build:
+  # ------- Celery Controller -------
+  celery-controller-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
@@ -27,13 +28,26 @@ jobs:
         uses: docker/setup-compose-action@v1
         with:
           version: latest
-      # ------- Celery Controller -------
       - name: Build celery controller
         run: docker compose build celery-controller
-      # ------- Celery Controller -------
+  # ------- Celery Python Workers -------
+  celery-python-workers-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
+        with:
+          version: latest
       - name: Build Python-related celery workers
         run: docker compose build celery-python-workers
-      # ------- Celery Controller -------
+  # ------- Celery Controller -------
+  celery-gpu-workers-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-compose-action@v1
+        with:
+          version: latest
       - name: Build GPU-related celery workers
         run: docker compose build celery-gpu-workers
       
