@@ -3,11 +3,9 @@ set -o errexit # Exit immediately if a command exits with a non-zero status.
 set -o nounset # Treat unset variables as an error when substituting.
 set -o xtrace # Print commands and their arguments as they are executed.
 
-cd /code/Rodan/rodan/jobs
-
 PIP=$(which pip3) || PIP=$(which pip)
 
-cd /code/Rodan/rodan/jobs
+cd /code/Rodan/code/jobs
 # Install Text Alignment
 $PIP install -r ./text_alignment/requirements.txt
 
