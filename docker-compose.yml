@@ -3,24 +3,22 @@
 # 
 # ===========================================
 # Summary of the system's services:
-# - Frontend: rodan-client, nginx
-# - Backend: rodan-main, iipsrv (for Diva.js)
+# - Frontend: client, nginx
+# - Backend: django, iipsrv (for Diva.js)
 # - Task Queue: rabbitmq
 # - Database: postgres, redis (messaging websocket)
-# - Workers: python3-celery, gpu-celery
+# - Celery: controller (core tasks) | Workers: python3, gpu
 
 volumes:
   rodan-resources:
 
 services:
-  # Frontend services
   frontend-nginx:
     container_name: "frontend-nginx"
     build: ./frontend/nginx
     environment:
       TZ: America/Toronto
       SERVER_HOST: localhost
-      # VERSION: "nightly"
     ports:
       - "80:80"
       - "443:443"
@@ -44,7 +42,7 @@ services:
     container_name: "backend-django"
     build:
       context: .
-      dockerfile: ./backend/rodan-main/Dockerfile
+      dockerfile: ./backend/django/Dockerfile.bak
     environment:
       TZ: America/Toronto
       SERVER_HOST: localhost
@@ -58,7 +56,7 @@ services:
       - ./scripts/local.env
     volumes:
       - "rodan-resources:/rodan/data"
-      - "./backend/rodan-main/code:/code/Rodan"
+      - "./backend/django/code:/code/Rodan"
 
   backend-iipsrv:
     container_name: "backend-iipsrv"
@@ -72,7 +70,7 @@ services:
     container_name: "celery-controller"
     build:
       context: .
-      dockerfile: ./backend/rodan-main/Dockerfile
+      dockerfile: ./backend/django/Dockerfile.bak
     # command: bash -c "tail -f /dev/null"
     environment:
       TZ: America/Toronto
@@ -87,7 +85,7 @@ services:
       - ./scripts/local.env
     volumes:
       - "rodan-resources:/rodan/data"
-      - "./backend/rodan-main/code:/code/Rodan"
+      - "./backend/django/code:/code/Rodan"
   
   
   # Celery Workers: Python and GPU (and more!) 
@@ -115,7 +113,7 @@ services:
       - celery-controller
     volumes:
       - "rodan-resources:/rodan/data"
-      - "./backend/rodan-main/code:/code/Rodan"
+      - "./backend/django/code:/code/Rodan"
 
   celery-gpu-workers:
     build:
@@ -136,7 +134,7 @@ services:
       - ./scripts/local.env
     volumes:
       - "rodan-resources:/rodan/data"
-      - "./backend/rodan-main/code:/code/Rodan"
+      - "./backend/django/code:/code/Rodan"
     deploy:
       resources:
         reservations:

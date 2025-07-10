@@ -38,8 +38,7 @@ RUN chmod +x /run/start-celery
 RUN chmod +x /run/wait-for-app
 
 # Copy external dependencies into main container.
-# rodan-main is not pulled from builder-pixel-neon (to ease local development)
-COPY ../../backend/rodan-main /code/Rodan
+COPY ../../backend/django /code/Rodan
 COPY --from=pixel-builder /pixel_wrapper /code/Rodan/rodan/jobs/pixel_wrapper
 COPY --from=neon-builder /neon_wrapper /code/Rodan/rodan/jobs/neon_wrapper
 # Gamera and Musicstaves will be installed later in this script.
