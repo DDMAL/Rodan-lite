@@ -148,13 +148,13 @@ COPY ./scripts/install_gpu_rodan_jobs /opt/
 
 # Install Rodan
 # Runs on both Rodan service, and Rodan-Celery
-COPY ./scripts/entrypoint /opt/
-COPY ./scripts/start-celery /run/
-COPY ./scripts/wait-for-app /run/
+COPY ../../scripts/entrypoint /opt/
+COPY ../../scripts/start-celery /run/
+COPY ../../scripts/wait-for-app /run/
 
 # Copying rodan core from build context into container
 # Rodan folder MUST be uppercase, otherwise many unittests fail.
-COPY ./rodan-main/code /code/Rodan
+COPY ../../backend/rodan-main /code/Rodan
 
 # necessary for scikit-image > 0.17, or else it will try to make a cache directory
 # in a place where the www-data user does not have permissions to do so
