@@ -32,10 +32,10 @@ services:
 
   frontend-client:
     container_name: "frontend-client"
-    build: ./frontend/rodan-client
+    build: ./frontend/client
     volumes:
-      - "./frontend/rodan-client/code:/code"
-      - "./frontend/rodan-client/config/configuration.json:/client/configuration.json"
+      - "./frontend/client/code:/code"
+      - "./frontend/client/config/configuration.json:/client/configuration.json"
 
   # Backend service: web server for Django & IIP Server
   backend-django:

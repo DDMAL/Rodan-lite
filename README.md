@@ -31,17 +31,17 @@ docker compose up -d
 
 # Components
 
-| Service/Component       | Group/Node       | Uses codes in    | Notes                   |
-| ----------------------- | ---------------- | ---------------- | ----------------------- |
-| `frontend-nginx`        | Frontend         |                  |                         |
-| `frontend-client`       | Frontend         | `scripts`        |                         |
-| `backend-django`        | Backend          |                  | formerly `rodan-main`   |
-| `backend-iipsrv`        | Backend          |                  |                         |
-| `database-redis`        | Database         |                  |                         |
-| `database-postgres`     | Database         |                  |                         |
-| `taskqueue-rabbitmq`    | Task queue       |                  |                         |
-| `celery-controller`     | Workers (Celery) | `backend/django` | Core jobs               |
-| `celery-python-workers` | Workers (Celery) | `backend/django` | Workers for Python jobs |
-| `celery-gpu-workers`    | Workers (Celery) | `backend/django` | Workers for GPU jobs    |
+| READY | Service/Component       | Group/Node       | Uses codes in    | Notes                   |
+| ----- | ----------------------- | ---------------- | ---------------- | ----------------------- |
+| [x]   | `frontend-nginx`        | Frontend         |                  |                         |
+| [x]   | `frontend-client`       | Frontend         | `scripts`        |                         |
+| [ ]   | `backend-django`        | Backend          |                  | formerly `rodan-main`   |
+| [x]   | `backend-iipsrv`        | Backend          |                  |                         |
+| [x]   | `database-redis`        | Database         |                  |                         |
+| [x]   | `database-postgres`     | Database         |                  |                         |
+| [x]   | `taskqueue-rabbitmq`    | Task queue       |                  |                         |
+| [ ]   | `celery-controller`     | Workers (Celery) | `backend/django` | Core jobs               |
+| [ ]   | `celery-python-workers` | Workers (Celery) | `backend/django` | Workers for Python jobs |
+| [ ]   | `celery-gpu-workers`    | Workers (Celery) | `backend/django` | Workers for GPU jobs    |
 
 Note: for all `celery` jobs, the code are inside `backend/django` (previously `backend/rodan-main`) folder.
