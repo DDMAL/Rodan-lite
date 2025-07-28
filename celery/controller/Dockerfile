@@ -8,3 +8,7 @@ RUN git clone https://github.com/DDMAL/Rodan-lite
 
 WORKDIR /Rodan-lite/backend/django
 RUN pip install -r requirements.txt
+RUN pip install poetry==1.4.2
+RUN pip install setuptools==58
+RUN rm poetry.lock
+RUN poetry install
