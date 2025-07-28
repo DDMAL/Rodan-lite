@@ -40,7 +40,7 @@ jobs:
           version: latest
       - name: Build Python-related celery workers
         run: docker compose build celery-python-workers
-  # ------- Celery Controller -------
+  # ------- Celery GPU Workers -------
   celery-gpu-workers-build:
     runs-on: ubuntu-latest
     steps:
