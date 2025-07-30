@@ -144,7 +144,7 @@ RUN rm -rf /var/lib/apt/lists/*
 #RUN pip uninstall opencv-python-headless && pip install opencv-python-headless==4.1.2.30
 
 # Install GPU Rodan Jobs
-COPY ../../scripts/install_gpu_rodan_jobs /opt/
+COPY ../../scripts/install_gpu_jobs/install_paco_classifier /opt/
 
 # Install Rodan
 # Runs on both Rodan service, and Rodan-Celery
@@ -165,8 +165,8 @@ RUN set -x \
   # Create Folders
   && mkdir -p /code/jobs \
   # Install GPU Jobs
-  && chmod +x /opt/install_gpu_rodan_jobs \
-  && /opt/install_gpu_rodan_jobs \
+  && chmod +x /opt/install_paco_classifier \
+  && /opt/install_paco_classifier \
   # Install Rodan
   && sed -i "s/lxml/#lxml/g" /code/Rodan/requirements.txt \
   # && sed -i "s/pybagit==1.5.0/-e git:\/\/github.com\/deepio\/pybagit.git@a27c9e0fc3bdf99dab8bd327f3ce9ea884abd6b4#egg=pybagit/g" /code/Rodan/requirements.txt \
