@@ -49,5 +49,5 @@ jobs:
         with:
           version: latest
       - name: Build GPU-related celery workers
-        run: docker compose build celery-gpu-workers
+        run: docker compose --profile celery-gpu-workers build
       
