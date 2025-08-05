@@ -144,17 +144,17 @@ RUN rm -rf /var/lib/apt/lists/*
 #RUN pip uninstall opencv-python-headless && pip install opencv-python-headless==4.1.2.30
 
 # Install GPU Rodan Jobs
-COPY ../../scripts/install_gpu_jobs/install_text_alignment /opt/
+COPY scripts/install_gpu_jobs/install_text_alignment /opt/
 
 # Install Rodan
 # Runs on both Rodan service, and Rodan-Celery
-COPY ../../scripts/entrypoint /opt/
-COPY ../../scripts/start-celery /run/
-COPY ../../scripts/wait-for-app /run/
+
+COPY scripts/start-celery /run/
+COPY scripts/wait-for-app /run/
 
 # Copying rodan core from build context into container
 # Rodan folder MUST be uppercase, otherwise many unittests fail.
-COPY ../../backend/django /code/Rodan
+COPY backend/django /code/Rodan
 
 # necessary for scikit-image > 0.17, or else it will try to make a cache directory
 # in a place where the www-data user does not have permissions to do so
