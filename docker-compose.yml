@@ -141,6 +141,7 @@ services:
 
   celery-gpu-background-removal:
     <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
     build:
       context: ./celery/gpu-workers/gpu-background-removal
       dockerfile: ./celery/gpu-workers/gpu-background-removal/Dockerfile
@@ -150,6 +151,7 @@ services:
 
   celery-gpu-paco-classifier:
     <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
     build:
       context: ./celery/gpu-workers/gpu-paco-classifier
       dockerfile: ./celery/gpu-workers/gpu-paco-classifier/Dockerfile
@@ -159,6 +161,7 @@ services:
 
   celery-gpu-sae-binarization:
     <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
     build:
       context: ./celery/gpu-workers/gpu-sae-binarization
       dockerfile: ./celery/gpu-workers/gpu-sae-binarization/Dockerfile
@@ -168,6 +171,7 @@ services:
 
   celery-gpu-text-alignment:
     <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
     build:
       context: ./celery/gpu-workers/gpu-text-alignment
       dockerfile: ./celery/gpu-workers/gpu-text-alignment/Dockerfile
