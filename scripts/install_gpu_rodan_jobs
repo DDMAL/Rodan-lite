@@ -7,41 +7,41 @@ PIP=$(which pip3) || PIP=$(which pip)
 
 cd /code/Rodan/code/jobs
 # Install Text Alignment
-$PIP install -r ./text_alignment/requirements.txt
+# $PIP install -r ./text_alignment/requirements.txt
 
-cat << EOF | python3
-new_backend = """{
-    "image_dim_ordering": "tf",
-    "epsilon": 1e-07,
-    "floatx": "float32",
-    "backend": "tensorflow"
-}"""
-open("keras.json", "w").write(new_backend)
-EOF
+# cat << EOF | python3
+# new_backend = """{
+#     "image_dim_ordering": "tf",
+#     "epsilon": 1e-07,
+#     "floatx": "float32",
+#     "backend": "tensorflow"
+# }"""
+# open("keras.json", "w").write(new_backend)
+# EOF
 
-# Install Background Removal
-cd /
-git clone -b v1.1.1 https://github.com/DDMAL/background_removal.git
-mv background_removal .background_removal
-cd .background_removal
-which pip3 && $PIP install --no-cache-dir .
+# # Install Background Removal
+# cd /
+# git clone -b v1.1.1 https://github.com/DDMAL/background_removal.git
+# mv background_removal .background_removal
+# cd .background_removal
+# which pip3 && $PIP install --no-cache-dir .
  
-# Install SAE_binarization
-cd /
-git clone -b v1.1.1 https://github.com/DDMAL/SAE_binarization.git
-mv SAE_binarization .SAE_binarization
-cd .SAE_binarization
-which pip3 && $PIP install --no-cache-dir . 
+# # Install SAE_binarization
+# cd /
+# git clone -b v1.1.1 https://github.com/DDMAL/SAE_binarization.git
+# mv SAE_binarization .SAE_binarization
+# cd .SAE_binarization
+# which pip3 && $PIP install --no-cache-dir . 
 
-# Install Paco classifier
-cd /
-git clone -b v2.0.4 --depth 1 https://github.com/DDMAL/Paco_classifier.git
-mv Paco_classifier .Paco_classifier
-cd .Paco_classifier
-which pip3 && $PIP install --no-cache-dir .
+# # Install Paco classifier
+# cd /
+# git clone -b v2.0.4 --depth 1 https://github.com/DDMAL/Paco_classifier.git
+# mv Paco_classifier .Paco_classifier
+# cd .Paco_classifier
+# which pip3 && $PIP install --no-cache-dir .
 
-cd /code/Rodan/code
-sed -i 's/#gpu //g' /code/Rodan/code/settings.py
+# cd /code/Rodan/code
+# sed -i 's/#gpu //g' /code/Rodan/code/settings.py
 
-# Temporary fix for OpenCV until https://github.com/DDMAL/Rodan/issues/639 is resolved.
-pip install opencv-python==4.6.0.66
+# # Temporary fix for OpenCV until https://github.com/DDMAL/Rodan/issues/639 is resolved.
+# pip install opencv-python==4.6.0.66
