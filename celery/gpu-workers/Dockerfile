@@ -148,7 +148,6 @@ COPY ../../scripts/install_gpu_rodan_jobs /opt/
 
 # Install Rodan
 # Runs on both Rodan service, and Rodan-Celery
-COPY ../../scripts/entrypoint /opt/
 COPY ../../scripts/start-celery /run/
 COPY ../../scripts/wait-for-app /run/
 
@@ -170,9 +169,6 @@ RUN set -x \
   # Install Rodan
   && sed -i "s/lxml/#lxml/g" /code/Rodan/requirements.txt \
   # && sed -i "s/pybagit==1.5.0/-e git:\/\/github.com\/deepio\/pybagit.git@a27c9e0fc3bdf99dab8bd327f3ce9ea884abd6b4#egg=pybagit/g" /code/Rodan/requirements.txt \
-  # Add Entrypoints
-  && sed -i 's/\r//' /opt/entrypoint \
-  && chmod +x /opt/entrypoint \
   # Add Celery script
   && chmod +x /run/start-celery \
   # Change the concurency for gpu jobs because Calvo is very expensive
@@ -185,5 +181,3 @@ RUN pip3 install -r /code/Rodan/requirements.txt
 
 RUN pip3 uninstall -y opencv-python opencv-python-headless
 RUN pip3 install opencv-python-headless==4.1.2.30
-
-ENTRYPOINT ["/opt/entrypoint"]
