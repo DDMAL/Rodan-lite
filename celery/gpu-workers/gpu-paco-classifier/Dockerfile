@@ -181,7 +181,7 @@ RUN set -x \
   && chmod +x /run/wait-for-app
 
 # Install Rodan.
-RUN pip3 install -r /code/Rodan/requirements.txt
+RUN pip3 install --no-cache-dir -r /code/Rodan/requirements.txt
 
 RUN pip3 uninstall -y opencv-python opencv-python-headless
 RUN pip3 install opencv-python-headless==4.1.2.30
