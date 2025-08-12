@@ -26,7 +26,7 @@ cd .Paco_classifier
 which pip3 && $PIP install --no-cache-dir .
 
 cd /code/Rodan/code
-sed -i 's/#gpu //g' /code/Rodan/rodan/settings.py
+sed -i 's/#gpu //g' /code/Rodan/code/settings.py
 
 # Temporary fix for OpenCV until https://github.com/DDMAL/Rodan/issues/639 is resolved.
 pip install opencv-python==4.6.0.66
