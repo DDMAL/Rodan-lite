@@ -174,9 +174,9 @@ services:
       dockerfile: ./celery/gpu-workers/gpu-text-alignment/Dockerfile
     environment:
       CELERY_JOB_QUEUE: GPU
-  See more: 
-  - https://docs.docker.com/compose/how-tos/gpu-support/
-  - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html
+  # See more: 
+  # - https://docs.docker.com/compose/how-tos/gpu-support/
+  # - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html
 
   # Database: PostgreSQL, Redit (messaging)
   database-postgres:
