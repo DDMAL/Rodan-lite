@@ -157,14 +157,14 @@ services:
     environment:
       CELERY_JOB_QUEUE: GPU
 
-  # celery-gpu-sae-binarization:
-  #   <<: *celery-gpu-worker-base
-  #   profiles: ["celery-gpu-workers"]
-  #   build:
-  #     context: .
-  #     dockerfile: ./celery/gpu-workers/gpu-sae-binarization/Dockerfile
-  #   environment:
-  #     CELERY_JOB_QUEUE: GPU
+  celery-gpu-sae-binarization:
+    <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
+    build:
+      context: .
+      dockerfile: ./celery/gpu-workers/gpu-sae-binarization/Dockerfile
+    environment:
+      CELERY_JOB_QUEUE: GPU
 
   # celery-gpu-text-alignment:
   #   <<: *celery-gpu-worker-base
