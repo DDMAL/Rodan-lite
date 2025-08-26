@@ -7,6 +7,11 @@ Host machine pre-requisite:
 - `docker`, (obviously)
 - `nvidia-container-toolkit` for GPU Celery jobs
 
+# Architecture overview
+<img width="3426" height="1094" alt="image" src="https://github.com/user-attachments/assets/91209ec5-5cfa-4191-a9a0-c410dfeb9298" />
+
+[View on Excalidraw](https://excalidraw.com/#json=18sxnZOE1l9KIegdq0s6C,rwN_kYdWpIwdned2ndgE0A)
+
 # Commands
 
 - Build & then run Rodan:
