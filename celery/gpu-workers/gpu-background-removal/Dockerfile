@@ -144,17 +144,18 @@ RUN rm -rf /var/lib/apt/lists/*
 #RUN pip uninstall opencv-python-headless && pip install opencv-python-headless==4.1.2.30
 
 # Install GPU Rodan Jobs
-COPY ../../scripts/install_gpu_rodan_jobs /opt/
+COPY scripts/install_gpu_jobs/install_background_removal /opt/
 
 # Install Rodan
 # Runs on both Rodan service, and Rodan-Celery
-COPY ../../scripts/entrypoint /opt/
-COPY ../../scripts/start-celery /run/
-COPY ../../scripts/wait-for-app /run/
+
+COPY scripts/start-celery /run/
+COPY scripts/wait-for-app /run/
+
 
 # Copying rodan core from build context into container
 # Rodan folder MUST be uppercase, otherwise many unittests fail.
-COPY ../../backend/django /code/Rodan
+COPY backend/django /code/Rodan
 
 # necessary for scikit-image > 0.17, or else it will try to make a cache directory
 # in a place where the www-data user does not have permissions to do so
@@ -165,14 +166,11 @@ RUN set -x \
   # Create Folders
   && mkdir -p /code/jobs \
   # Install GPU Jobs
-  && chmod +x /opt/install_gpu_rodan_jobs \
-  && /opt/install_gpu_rodan_jobs \
+  && chmod +x /opt/install_background_removal \
+  && /opt/install_background_removal \
   # Install Rodan
   && sed -i "s/lxml/#lxml/g" /code/Rodan/requirements.txt \
   # && sed -i "s/pybagit==1.5.0/-e git:\/\/github.com\/deepio\/pybagit.git@a27c9e0fc3bdf99dab8bd327f3ce9ea884abd6b4#egg=pybagit/g" /code/Rodan/requirements.txt \
-  # Add Entrypoints
-  && sed -i 's/\r//' /opt/entrypoint \
-  && chmod +x /opt/entrypoint \
   # Add Celery script
   && chmod +x /run/start-celery \
   # Change the concurency for gpu jobs because Calvo is very expensive
@@ -181,9 +179,7 @@ RUN set -x \
   && chmod +x /run/wait-for-app
 
 # Install Rodan.
-RUN pip3 install -r /code/Rodan/requirements.txt
+RUN pip3 install --no-cache-dir -r /code/Rodan/requirements.txt
 
 RUN pip3 uninstall -y opencv-python opencv-python-headless
 RUN pip3 install opencv-python-headless==4.1.2.30
-
-ENTRYPOINT ["/opt/entrypoint"]

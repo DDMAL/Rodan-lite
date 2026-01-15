@@ -12,6 +12,30 @@
 volumes:
   rodan-resources:
 
+x-celery-gpu-worker-base: &celery-gpu-worker-base
+  command: bash -c "tail -f /dev/null"
+  environment:
+    TZ: America/Toronto
+    SERVER_HOST: localhost
+  depends_on:
+    - backend-django
+    - taskqueue-rabbitmq
+    - database-postgres
+    - database-redis
+    - celery-controller
+  env_file:
+    - ./scripts/local.env
+  volumes:
+    - "rodan-resources:/rodan/data"
+    - "./backend/django/code:/code/Rodan"
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu, compute, utility]
+
 services:
   frontend-nginx:
     container_name: "frontend-nginx"
@@ -115,36 +139,44 @@ services:
       - "rodan-resources:/rodan/data"
       - "./backend/django/code:/code/Rodan"
 
-  celery-gpu-workers:
+  celery-gpu-background-removal:
+    <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
     build:
       context: .
-      dockerfile: ./celery/gpu-workers/Dockerfile
-    command: bash -c "tail -f /dev/null"
+      dockerfile: ./celery/gpu-workers/gpu-background-removal/Dockerfile
     environment:
-      TZ: America/Toronto
-      SERVER_HOST: localhost
-      # CELERY_JOB_QUEUE: GPU
-    depends_on:
-      - backend-django
-      - taskqueue-rabbitmq
-      - database-postgres
-      - database-redis
-      - celery-controller
-    env_file:
-      - ./scripts/local.env
-    volumes:
-      - "rodan-resources:/rodan/data"
-      - "./backend/django/code:/code/Rodan"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu, compute, utility]
-              # See more: 
-              # - https://docs.docker.com/compose/how-tos/gpu-support/
-              # - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html
+      CELERY_JOB_QUEUE: GPU
+
+  celery-gpu-paco-classifier:
+    <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
+    build:
+      context: .
+      dockerfile: ./celery/gpu-workers/gpu-paco-classifier/Dockerfile
+    environment:
+      CELERY_JOB_QUEUE: GPU
+
+  celery-gpu-sae-binarization:
+    <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
+    build:
+      context: .
+      dockerfile: ./celery/gpu-workers/gpu-sae-binarization/Dockerfile
+    environment:
+      CELERY_JOB_QUEUE: GPU
+
+  celery-gpu-text-alignment:
+    <<: *celery-gpu-worker-base
+    profiles: ["celery-gpu-workers"]
+    build:
+      context: .
+      dockerfile: ./celery/gpu-workers/gpu-text-alignment/Dockerfile
+    environment:
+      CELERY_JOB_QUEUE: GPU
+  # See more: 
+  # - https://docs.docker.com/compose/how-tos/gpu-support/
+  # - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html
 
   # Database: PostgreSQL, Redit (messaging)
   database-postgres:

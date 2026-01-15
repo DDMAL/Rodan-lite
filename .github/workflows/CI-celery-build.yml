@@ -18,6 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
   # ------- Celery Controller -------
   celery-controller-build:
     runs-on: ubuntu-latest
@@ -45,9 +46,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Free disk space before Docker build
+        run: |
+          echo "=== Disk usage before cleanup ==="
+          df -h
+          sudo rm -rf /usr/local/lib/android || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/share/dotnet || true
+          docker system prune -af --volumes || true
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          echo "=== Disk usage after cleanup ==="
+          df -h
       - uses: docker/setup-compose-action@v1
         with:
           version: latest
       - name: Build GPU-related celery workers
-        run: docker compose build celery-gpu-workers
+        run: docker compose --profile celery-gpu-workers build
       
