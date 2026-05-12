@@ -36,9 +36,6 @@ mkdir /code/Rodan/rodan/static || echo "Static directory already exists!"
 
 
 runuser -u root -- python3 manage.py collectstatic --noinput
-# Stop the token expiry, because the entire token authentication is very broken and this is a fix until
-# we can decouple djoser and reconstruct the token auth the right way.
-sed -i "s/15/999999/g" /code/Rodan/rodan/settings.py
 # This serves rodan to nginx, it could also be a unix socket.
 # [TODO] Test to see if it is any faster to use unix sockets instead of http requests between containers.
 # Usually, unix sockets would be faster but between docker containers, I am not certain because of the
