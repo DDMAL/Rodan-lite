@@ -42,7 +42,7 @@ services:
     container_name: "backend-django"
     build:
       context: .
-      dockerfile: ./backend/django/Dockerfile.bak
+      dockerfile: ./backend/django/Dockerfile
     environment:
       TZ: America/Toronto
       SERVER_HOST: localhost
@@ -70,7 +70,7 @@ services:
     container_name: "celery-controller"
     build:
       context: .
-      dockerfile: ./backend/django/Dockerfile.bak
+      dockerfile: ./backend/django/Dockerfile
     # command: bash -c "tail -f /dev/null"
     environment:
       TZ: America/Toronto

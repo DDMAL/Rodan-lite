@@ -23,7 +23,11 @@ COPY ../../scripts/start /run/
 RUN chmod +x /run/start \
 && chown www-data /run/start
 
-COPY . /rodan-django/
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list \
+    && sed -i '/buster-updates/d' /etc/apt/sources.list \
+    && apt-get update && apt-get install -y --no-install-recommends git libpq-dev build-essential && rm -rf /var/lib/apt/lists/*
+
+COPY backend/django /rodan-django/
 WORKDIR /rodan-django
 
 RUN pip install --upgrade pip && pip install -r requirements.txt

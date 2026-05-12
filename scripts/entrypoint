@@ -1,0 +1,11 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o xtrace
+
+mkdir -p /var/www || echo '/var/www already exists, skipping'
+mkdir -p /code/Rodan/staticfiles || echo '/code/Rodan/staticfiles already exists, skipping'
+chmod a+rwx /var
+chmod a+rwx /code/Rodan/*
+
+exec /run/start-celery
