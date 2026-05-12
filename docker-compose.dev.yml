@@ -1,0 +1,30 @@
+# Dev override: excludes services not needed for backend Django development.
+# Used by .devcontainer/devcontainer.json to reduce memory footprint when
+# attaching VS Code to the backend-django container.
+#
+# backend-django runs `sleep infinity` instead of the full start script so VS Code
+# can attach without Django consuming all available memory on startup.
+# To start the server manually inside the container:
+#   /run/start
+#
+# To start workers manually when needed:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile worker up
+
+services:
+  backend-django:
+    command: sleep infinity
+
+  frontend-nginx:
+    profiles: ["frontend"]
+
+  frontend-client:
+    profiles: ["frontend"]
+
+  celery-controller:
+    profiles: ["worker"]
+
+  celery-python-workers:
+    profiles: ["worker"]
+
+  celery-gpu-workers:
+    profiles: ["worker"]

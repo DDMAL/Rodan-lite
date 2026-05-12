@@ -1,0 +1,26 @@
+{
+  "name": "Rodan-lite (Gamera / Classifier worker)",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "celery-python-workers",
+  "workspaceFolder": "/code/Rodan",
+  "remoteUser": "root",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.pylint",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python3",
+        "python.analysis.extraPaths": ["/code/Rodan"]
+      }
+    }
+  },
+
+  "postStartCommand": "pip install debugpy -q",
+
+  "forwardPorts": []
+}

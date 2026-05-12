@@ -14,17 +14,30 @@ Host machine pre-requisite:
 
 # Commands
 
-- Build & then run Rodan:
+## Build & then run Rodan:
+
+- First:
 
 ```sh
 docker compose build
 docker compose up
+```
+- (If you are using VSCode) After Rodan is running:
+```
+Go to command Palette (Cmd + Shift + P), then type
+Dev Containers: Rebuild and Reopen in Container
 ```
 
 - Build the project from starch (going to be a separate compose file):
 
 ```sh
 docker compose -f docker-compose.yml build
+```
+
+- If you ever need the workers locally, you can bring them up with:
+
+```sh
+docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile worker up
 ```
 
 - Run on production (goal)
